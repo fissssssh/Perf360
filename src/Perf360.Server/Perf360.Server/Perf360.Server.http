@@ -1,0 +1,6 @@
+@Perf360.Server_HostAddress = http://localhost:5274
+
+GET {{Perf360.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

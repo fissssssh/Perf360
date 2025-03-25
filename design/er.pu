@@ -1,0 +1,39 @@
+@startuml 1
+entity User{
+    Name
+}
+entity Department{
+    Name
+}
+entity Role{
+    Name
+}
+
+User }|--|| Department
+Role }|--|| Department
+User ||--|{ Role
+
+entity Review{
+    Name
+}
+entity ReviewDimension{
+    Name
+    Description
+    Reviewer
+    Target
+}
+Review||--|{User
+ReviewDimension}|--|{Role
+
+entity ReviewRecord{
+    Reviewer
+    Target
+    ReviewDimension
+    Score
+    Remark
+}
+Review||--|{ReviewRecord
+ReviewDimension||--|{ReviewRecord
+
+
+@endUML
