@@ -12,8 +12,8 @@ namespace Perf360.Server.Data.Models
         public string Name { get; set; } = default!;
 
         [ForeignKey("Department")]
-        public uint DepartmentID { get; set; }
+        public uint? DepartmentID { get; set; }
 
-        public virtual Department Department { get; set; } = default!;
+        public virtual Department? Department { get; set; }
     }
 }

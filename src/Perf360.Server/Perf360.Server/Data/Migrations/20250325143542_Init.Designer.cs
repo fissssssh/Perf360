@@ -12,7 +12,7 @@ using Perf360.Server.Data;
 namespace Perf360.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250325092923_Init")]
+    [Migration("20250325143542_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -23,6 +23,7 @@ namespace Perf360.Server.Data.Migrations
                 .HasAnnotation("ProductVersion", "8.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4 COLLATE utf8mb4_zh_0900_as_cs");
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -205,7 +206,7 @@ namespace Perf360.Server.Data.Migrations
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<uint>("DepartmentID")
+                    b.Property<uint?>("DepartmentID")
                         .HasColumnType("int unsigned");
 
                     b.Property<string>("Name")
@@ -281,10 +282,10 @@ namespace Perf360.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<uint>("ReviewerRoleID")
+                    b.Property<uint?>("ReviewerRoleID")
                         .HasColumnType("int unsigned");
 
-                    b.Property<uint>("TargetRoleID")
+                    b.Property<uint?>("TargetRoleID")
                         .HasColumnType("int unsigned");
 
                     b.Property<DateTime>("UpdateAt")
@@ -482,9 +483,7 @@ namespace Perf360.Server.Data.Migrations
                 {
                     b.HasOne("Perf360.Server.Data.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentID");
 
                     b.Navigation("Department");
                 });
@@ -493,15 +492,11 @@ namespace Perf360.Server.Data.Migrations
                 {
                     b.HasOne("Perf360.Server.Data.Models.DepartmentRole", "ReviewerRole")
                         .WithMany()
-                        .HasForeignKey("ReviewerRoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReviewerRoleID");
 
                     b.HasOne("Perf360.Server.Data.Models.DepartmentRole", "TargetRole")
                         .WithMany()
-                        .HasForeignKey("TargetRoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TargetRoleID");
 
                     b.Navigation("ReviewerRole");
 

@@ -18,6 +18,10 @@ namespace Perf360.Server.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.HasCharSet("utf8mb4 COLLATE utf8mb4_zh_0900_as_cs");
+
+            base.OnModelCreating(builder);
+
             foreach (var entityType in builder.Model.GetEntityTypes())
             {
                 if (entityType.ClrType.IsAssignableTo(typeof(Entity)))
@@ -30,13 +34,11 @@ namespace Perf360.Server.Data
             }
 
             builder.Entity<Review>().HasMany(x => x.Participants).WithMany(x => x.Reviews);
-
-            base.OnModelCreating(builder);
         }
 
         static LambdaExpression GetSoftDeleteQueryFilter<TEntity>() where TEntity : Entity
         {
-            Expression<Func<TEntity, bool>> expr = x => x.DeleteAt != null;
+            Expression<Func<TEntity, bool>> expr = x => x.DeleteAt == null;
             return expr;
         }
     }

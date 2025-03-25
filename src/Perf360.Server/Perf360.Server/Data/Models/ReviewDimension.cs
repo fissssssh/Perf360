@@ -14,13 +14,13 @@ namespace Perf360.Server.Data.Models
         public string? Description { get; set; }
 
         [ForeignKey(nameof(ReviewerRole))]
-        public uint ReviewerRoleID { get; set; }
+        public uint? ReviewerRoleID { get; set; }
 
         [ForeignKey(nameof(TargetRole))]
-        public uint TargetRoleID { get; set; }
+        public uint? TargetRoleID { get; set; }
 
-        public virtual DepartmentRole ReviewerRole { get; set; } = default!;
+        public virtual DepartmentRole? ReviewerRole { get; set; } = default!;
 
-        public virtual DepartmentRole TargetRole { get; set; } = default!;
+        public virtual DepartmentRole? TargetRole { get; set; } = default!;
     }
 }
