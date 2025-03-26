@@ -6,12 +6,11 @@ using System.Reflection;
 
 namespace Perf360.Server.Data
 {
-    public class AppDbContext : IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<User, Role, string>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Department> Departments { get; set; } = default!;
-        public DbSet<DepartmentRole> DepartmentRoles { get; set; } = default!;
         public DbSet<ReviewDimension> ReviewDimensions { get; set; } = default!;
         public DbSet<Review> Reviews { get; set; } = default!;
         public DbSet<ReviewRecord> ReviewRecords { get; set; } = default!;

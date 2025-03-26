@@ -19,8 +19,8 @@ entity Review{
 entity ReviewDimension{
     Name
     Description
-    Reviewer
-    Target
+    ReviewerRole
+    TargetRole
 }
 Review||--|{User
 ReviewDimension}|--|{Role

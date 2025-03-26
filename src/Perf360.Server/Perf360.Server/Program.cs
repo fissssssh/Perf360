@@ -27,7 +27,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     });
 });
 
-builder.Services.AddIdentityCore<User>().AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentityCore<User>().AddRoleManager<Role>().AddEntityFrameworkStores<AppDbContext>();
 
 
 builder.Services.AddControllers().AddNewtonsoftJson();
