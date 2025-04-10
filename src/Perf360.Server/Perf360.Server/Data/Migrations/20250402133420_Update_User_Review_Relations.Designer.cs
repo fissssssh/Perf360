@@ -12,45 +12,19 @@ using Perf360.Server.Data;
 namespace Perf360.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250325143916_Add_Index_For_DeleteAt")]
-    partial class Add_Index_For_DeleteAt
+    [Migration("20250402133420_Update_User_Review_Relations")]
+    partial class Update_User_Review_Relations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.14")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4 COLLATE utf8mb4_zh_0900_as_cs");
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles", (string)null);
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -158,86 +132,13 @@ namespace Perf360.Server.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Perf360.Server.Data.Models.Department", b =>
-                {
-                    b.Property<uint>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ID"));
-
-                    b.Property<DateTime>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    b.Property<DateTime?>("DeleteAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("UpdateAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdateAt"));
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("DeleteAt");
-
-                    b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("Perf360.Server.Data.Models.DepartmentRole", b =>
-                {
-                    b.Property<uint>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ID"));
-
-                    b.Property<DateTime>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    b.Property<DateTime?>("DeleteAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<uint?>("DepartmentID")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("UpdateAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdateAt"));
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("DeleteAt");
-
-                    b.HasIndex("DepartmentID");
-
-                    b.ToTable("DepartmentRoles");
-                });
-
             modelBuilder.Entity("Perf360.Server.Data.Models.Review", b =>
                 {
-                    b.Property<uint>("ID")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int unsigned");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ID"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
 
                     b.Property<DateTime>("CreateAt")
                         .ValueGeneratedOnAdd()
@@ -258,7 +159,7 @@ namespace Perf360.Server.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdateAt"));
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("DeleteAt");
 
@@ -267,11 +168,11 @@ namespace Perf360.Server.Data.Migrations
 
             modelBuilder.Entity("Perf360.Server.Data.Models.ReviewDimension", b =>
                 {
-                    b.Property<uint>("ID")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int unsigned");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ID"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
 
                     b.Property<DateTime>("CreateAt")
                         .ValueGeneratedOnAdd()
@@ -288,10 +189,10 @@ namespace Perf360.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<uint?>("ReviewerRoleID")
+                    b.Property<uint>("ReviewerRoleId")
                         .HasColumnType("int unsigned");
 
-                    b.Property<uint?>("TargetRoleID")
+                    b.Property<uint>("TargetRoleId")
                         .HasColumnType("int unsigned");
 
                     b.Property<DateTime>("UpdateAt")
@@ -301,24 +202,24 @@ namespace Perf360.Server.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdateAt"));
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("DeleteAt");
 
-                    b.HasIndex("ReviewerRoleID");
+                    b.HasIndex("ReviewerRoleId");
 
-                    b.HasIndex("TargetRoleID");
+                    b.HasIndex("TargetRoleId");
 
                     b.ToTable("ReviewDimensions");
                 });
 
             modelBuilder.Entity("Perf360.Server.Data.Models.ReviewRecord", b =>
                 {
-                    b.Property<uint>("ID")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int unsigned");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("ID"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
 
                     b.Property<string>("Comment")
                         .HasColumnType("longtext");
@@ -331,17 +232,26 @@ namespace Perf360.Server.Data.Migrations
                     b.Property<DateTime?>("DeleteAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<uint>("ReviewID")
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<uint>("ReviewId")
                         .HasColumnType("int unsigned");
 
-                    b.Property<uint>("ReviewerID")
-                        .HasColumnType("int unsigned");
+                    b.Property<string>("ReviewerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<float>("Score")
                         .HasColumnType("float");
 
-                    b.Property<uint>("TargetID")
-                        .HasColumnType("int unsigned");
+                    b.Property<string>("TargetId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("UpdateAt")
                         .ValueGeneratedOnAddOrUpdate()
@@ -350,13 +260,80 @@ namespace Perf360.Server.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdateAt"));
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("DeleteAt");
 
-                    b.HasIndex("ReviewID");
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("ReviewerId");
+
+                    b.HasIndex("TargetId");
 
                     b.ToTable("ReviewRecords");
+                });
+
+            modelBuilder.Entity("Perf360.Server.Data.Models.ReviewRole", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int unsigned");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                    b.Property<DateTime?>("DeleteAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdateAt"));
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeleteAt");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ReviewRoles");
+                });
+
+            modelBuilder.Entity("Perf360.Server.Data.Models.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Perf360.Server.Data.Models.User", b =>
@@ -423,24 +400,29 @@ namespace Perf360.Server.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("ReviewUser", b =>
+            modelBuilder.Entity("Perf360.Server.Data.Models.UserReview", b =>
                 {
-                    b.Property<string>("ParticipantsId")
+                    b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<uint>("ReviewsID")
+                    b.Property<uint>("ReviewId")
                         .HasColumnType("int unsigned");
 
-                    b.HasKey("ParticipantsId", "ReviewsID");
+                    b.Property<uint>("ReviewRoleId")
+                        .HasColumnType("int unsigned");
 
-                    b.HasIndex("ReviewsID");
+                    b.HasKey("UserId", "ReviewId");
 
-                    b.ToTable("ReviewUser");
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("ReviewRoleId");
+
+                    b.ToTable("UserReview");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Perf360.Server.Data.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -467,7 +449,7 @@ namespace Perf360.Server.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Perf360.Server.Data.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -489,24 +471,19 @@ namespace Perf360.Server.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Perf360.Server.Data.Models.DepartmentRole", b =>
-                {
-                    b.HasOne("Perf360.Server.Data.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentID");
-
-                    b.Navigation("Department");
-                });
-
             modelBuilder.Entity("Perf360.Server.Data.Models.ReviewDimension", b =>
                 {
-                    b.HasOne("Perf360.Server.Data.Models.DepartmentRole", "ReviewerRole")
+                    b.HasOne("Perf360.Server.Data.Models.ReviewRole", "ReviewerRole")
                         .WithMany()
-                        .HasForeignKey("ReviewerRoleID");
+                        .HasForeignKey("ReviewerRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Perf360.Server.Data.Models.DepartmentRole", "TargetRole")
+                    b.HasOne("Perf360.Server.Data.Models.ReviewRole", "TargetRole")
                         .WithMany()
-                        .HasForeignKey("TargetRoleID");
+                        .HasForeignKey("TargetRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ReviewerRole");
 
@@ -517,29 +494,64 @@ namespace Perf360.Server.Data.Migrations
                 {
                     b.HasOne("Perf360.Server.Data.Models.Review", null)
                         .WithMany("ReviewRecords")
-                        .HasForeignKey("ReviewID")
+                        .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Perf360.Server.Data.Models.User", "Reviewer")
+                        .WithMany()
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Perf360.Server.Data.Models.User", "Target")
+                        .WithMany()
+                        .HasForeignKey("TargetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reviewer");
+
+                    b.Navigation("Target");
                 });
 
-            modelBuilder.Entity("ReviewUser", b =>
+            modelBuilder.Entity("Perf360.Server.Data.Models.UserReview", b =>
                 {
-                    b.HasOne("Perf360.Server.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("ParticipantsId")
+                    b.HasOne("Perf360.Server.Data.Models.Review", "Review")
+                        .WithMany("UserReviews")
+                        .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Perf360.Server.Data.Models.Review", null)
+                    b.HasOne("Perf360.Server.Data.Models.ReviewRole", "ReviewRole")
                         .WithMany()
-                        .HasForeignKey("ReviewsID")
+                        .HasForeignKey("ReviewRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Perf360.Server.Data.Models.User", "User")
+                        .WithMany("UserReviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+
+                    b.Navigation("ReviewRole");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Perf360.Server.Data.Models.Review", b =>
                 {
                     b.Navigation("ReviewRecords");
+
+                    b.Navigation("UserReviews");
+                });
+
+            modelBuilder.Entity("Perf360.Server.Data.Models.User", b =>
+                {
+                    b.Navigation("UserReviews");
                 });
 #pragma warning restore 612, 618
         }

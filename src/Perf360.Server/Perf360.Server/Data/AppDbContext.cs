@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Perf360.Server.Data.Models;
+using Perf360.Server.Data.Models.Abstractions;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -10,10 +11,10 @@ namespace Perf360.Server.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Department> Departments { get; set; } = default!;
         public DbSet<ReviewDimension> ReviewDimensions { get; set; } = default!;
         public DbSet<Review> Reviews { get; set; } = default!;
         public DbSet<ReviewRecord> ReviewRecords { get; set; } = default!;
+        public DbSet<ReviewRole> ReviewRoles { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,7 +33,11 @@ namespace Perf360.Server.Data
                 }
             }
 
-            builder.Entity<Review>().HasMany(x => x.Participants).WithMany(x => x.Reviews);
+            builder.Entity<Review>().HasMany(x => x.Participants).WithMany(x => x.Reviews).UsingEntity<UserReview>(
+                l => l.HasOne(l => l.User).WithMany(u => u.UserReviews).HasForeignKey(l => l.UserId),
+                r => r.HasOne(r => r.Review).WithMany(r => r.UserReviews).HasForeignKey(r => r.ReviewId),
+                j => j.HasKey(ur => new { ur.UserId, ur.ReviewId })
+            );
         }
 
         static LambdaExpression GetSoftDeleteQueryFilter<TEntity>() where TEntity : Entity

@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Perf360.Server.Data;
 using Perf360.Server.Data.Models;
+using Perf360.Server.Dtos;
 
 namespace Perf360.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "admin")]
     public class ReviewsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -23,11 +26,46 @@ namespace Perf360.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateReview([FromBody] Review review)
+        public async Task<IActionResult> CreateReview([FromBody] CreateReviewDto reviewDto)
         {
+
+            var userIds = reviewDto.Participants.Select(p => p.UserId).ToList();
+            var reviewRoleIds = reviewDto.Participants.Select(p => p.ReviewRoleId).ToList();
+
+            var users = await _context.Users.Where(u => userIds.Contains(u.Id)).ToDictionaryAsync(u => u.Id, u => u);
+            var dimensions = await _context.ReviewDimensions.Where(d => reviewRoleIds.Contains(d.ReviewerRoleId)).ToListAsync();
+
+            using var trascation = await _context.Database.BeginTransactionAsync();
+
+            var review = reviewDto.Adapt<Review>();
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
-            return Ok(review);
+
+            foreach (var participant in reviewDto.Participants)
+            {
+                var user = users[participant.UserId];
+                review.UserReviews.Add(new UserReview { UserId = user.Id, ReviewRoleId = participant.ReviewRoleId });
+                await _context.SaveChangesAsync();
+                foreach (var dimension in dimensions.Where(d => d.ReviewerRoleId == participant.ReviewRoleId))
+                {
+                    var targets = reviewDto.Participants.Where(p => p.ReviewRoleId == dimension.TargetRoleId).ToList();
+                    foreach (var target in targets)
+                    {
+                        var reviewRecord = new ReviewRecord
+                        {
+                            Name = dimension.Name,
+                            Description = dimension.Description,
+                            ReviewerId = participant.UserId,
+                            TargetId = target.UserId,
+                        };
+                        review.ReviewRecords.Add(reviewRecord);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            await trascation.CommitAsync();
+            return Ok(review.Adapt<ReviewDto>());
         }
 
         [HttpDelete("{id}")]
@@ -45,7 +83,7 @@ namespace Perf360.Server.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}/review_records")]
+        [HttpGet("{id}/review-records")]
         public async Task<IActionResult> GetReviewRecords(uint id)
         {
             var review = await _context.Reviews.FindAsync(id);
@@ -54,49 +92,9 @@ namespace Perf360.Server.Controllers
                 return NotFound();
             }
 
-            var reviewRecords = await _context.ReviewRecords.Where(r => r.ReviewID == id).ToListAsync();
+            var reviewRecords = await _context.ReviewRecords.Where(r => r.ReviewId == id).ProjectToType<ReviewRecordDto>().ToListAsync();
 
             return Ok(reviewRecords);
-        }
-
-        [Authorize]
-        [HttpPost("{id}/review_records")]
-        public async Task<IActionResult> CreateReviewRecord(uint id, [FromBody] ReviewRecord reviewRecord)
-        {
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            reviewRecord.ReviewID = id;
-            reviewRecord.ReviewerID = uint.Parse(HttpContext.User.Identity!.Name!);
-
-            await _context.ReviewRecords.AddAsync(reviewRecord);
-            await _context.SaveChangesAsync();
-
-            return Ok(reviewRecord);
-        }
-
-        [HttpPost("{id}/participants")]
-        public async Task<IActionResult> AddParticipants(uint id, string userId)
-        {
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            review.Participants.Add(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
     }
 }

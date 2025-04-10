@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Perf360.Server.Data.Models.Abstractions;
 
 namespace Perf360.Server.Data.Models
 {
@@ -14,13 +16,15 @@ namespace Perf360.Server.Data.Models
         public string? Description { get; set; }
 
         [ForeignKey(nameof(ReviewerRole))]
-        public uint? ReviewerRoleID { get; set; }
+        public uint ReviewerRoleId { get; set; } = default!;
 
         [ForeignKey(nameof(TargetRole))]
-        public uint? TargetRoleID { get; set; }
+        public uint TargetRoleId { get; set; } = default!;
 
-        public virtual DepartmentRole? ReviewerRole { get; set; } = default!;
+        [DeleteBehavior(DeleteBehavior.Cascade)]
+        public virtual ReviewRole ReviewerRole { get; set; } = default!;
 
-        public virtual DepartmentRole? TargetRole { get; set; } = default!;
+        [DeleteBehavior(DeleteBehavior.Cascade)]
+        public virtual ReviewRole TargetRole { get; set; } = default!;
     }
 }

@@ -5,5 +5,6 @@ namespace Perf360.Server.Data.Models
     public class User : IdentityUser
     {
         public virtual HashSet<Review> Reviews { get; set; } = [];
+        public virtual HashSet<UserReview> UserReviews { get; set; } = [];
     }
 }

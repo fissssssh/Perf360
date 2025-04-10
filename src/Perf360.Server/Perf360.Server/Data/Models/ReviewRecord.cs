@@ -1,15 +1,25 @@
-﻿namespace Perf360.Server.Data.Models
+﻿using Perf360.Server.Data.Models.Abstractions;
+
+namespace Perf360.Server.Data.Models
 {
     public class ReviewRecord : Entity
     {
-        public uint ReviewID { get; set; }
+        public uint ReviewId { get; set; }
 
-        public uint ReviewerID { get; set; }
+        public string Name { get; set; } = default!;
 
-        public uint TargetID { get; set; }
+        public string? Description { get; set; }
 
-        public float Score { get; set; }
+        public string ReviewerId { get; set; } = default!;
+
+        public string TargetId { get; set; } = default!;
+
+        public float? Score { get; set; }
 
         public string? Comment { get; set; }
+
+        public virtual User Reviewer { get; set; } = default!;
+
+        public virtual User Target { get; set; } = default!;
     }
 }

@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Perf360.Server.Data;
 using Perf360.Server.Data.Models;
+using Perf360.Server.Dtos;
 
 namespace Perf360.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RoleController : ControllerBase
+    [Authorize(Roles = "admin")]
+    public class RolesController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly RoleManager<Role> _roleManager;
 
-        public RoleController(AppDbContext context, RoleManager<Role> roleManager)
+        public RolesController(AppDbContext context, RoleManager<Role> roleManager)
         {
             _context = context;
             _roleManager = roleManager;
@@ -22,13 +26,14 @@ namespace Perf360.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoles()
         {
-            var roles = await _context.Roles.ToListAsync();
+            var roles = await _context.Roles.ProjectToType<RoleDto>().ToListAsync();
             return Ok(roles);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRole([FromBody] Role role)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto roleDto)
         {
+            var role = roleDto.Adapt<Role>();
             var result = await _roleManager.CreateAsync(role);
 
             if (!result.Succeeded)
@@ -36,7 +41,7 @@ namespace Perf360.Server.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok(role);
+            return Ok(role.Adapt<RoleDto>());
         }
 
         [HttpDelete("{id}")]
