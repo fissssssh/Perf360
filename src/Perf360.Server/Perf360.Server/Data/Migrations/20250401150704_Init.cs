@@ -316,45 +316,6 @@ namespace Perf360.Server.Data.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4 COLLATE utf8mb4_zh_0900_as_cs");
 
-            migrationBuilder.CreateTable(
-                name: "UserReview",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4 COLLATE utf8mb4_zh_0900_as_cs"),
-                    ReviewId = table.Column<uint>(type: "int unsigned", nullable: false),
-                    ReviewRoleId = table.Column<uint>(type: "int unsigned", nullable: false),
-                    ReviewId1 = table.Column<uint>(type: "int unsigned", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserReview", x => new { x.UserId, x.ReviewId });
-                    table.ForeignKey(
-                        name: "FK_UserReview_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserReview_ReviewRoles_ReviewRoleId",
-                        column: x => x.ReviewRoleId,
-                        principalTable: "ReviewRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserReview_Reviews_ReviewId",
-                        column: x => x.ReviewId,
-                        principalTable: "Reviews",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserReview_Reviews_ReviewId1",
-                        column: x => x.ReviewId1,
-                        principalTable: "Reviews",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4 COLLATE utf8mb4_zh_0900_as_cs");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -442,21 +403,6 @@ namespace Perf360.Server.Data.Migrations
                 name: "IX_Reviews_DeleteAt",
                 table: "Reviews",
                 column: "DeleteAt");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserReview_ReviewId",
-                table: "UserReview",
-                column: "ReviewId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserReview_ReviewId1",
-                table: "UserReview",
-                column: "ReviewId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserReview_ReviewRoleId",
-                table: "UserReview",
-                column: "ReviewRoleId");
         }
 
         /// <inheritdoc />
@@ -482,9 +428,6 @@ namespace Perf360.Server.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReviewRecords");
-
-            migrationBuilder.DropTable(
-                name: "UserReview");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

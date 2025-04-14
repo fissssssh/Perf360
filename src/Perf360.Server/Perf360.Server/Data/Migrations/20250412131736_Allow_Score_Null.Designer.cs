@@ -12,8 +12,8 @@ using Perf360.Server.Data;
 namespace Perf360.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250410152532_Record_Score_Allow_Null")]
-    partial class Record_Score_Allow_Null
+    [Migration("20250412131736_Allow_Score_Null")]
+    partial class Allow_Score_Null
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -411,7 +411,7 @@ namespace Perf360.Server.Data.Migrations
                     b.Property<uint>("ReviewRoleId")
                         .HasColumnType("int unsigned");
 
-                    b.HasKey("UserId", "ReviewId");
+                    b.HasKey("UserId", "ReviewId", "ReviewRoleId");
 
                     b.HasIndex("ReviewId");
 

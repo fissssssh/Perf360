@@ -30,7 +30,7 @@ namespace Perf360.Server.Controllers
         {
 
             var userIds = reviewDto.Participants.Select(p => p.UserId).ToList();
-            var reviewRoleIds = reviewDto.Participants.Select(p => p.ReviewRoleId).ToList();
+            var reviewRoleIds = reviewDto.Participants.SelectMany(p => p.ReviewRoleIds).ToList();
 
             var users = await _context.Users.Where(u => userIds.Contains(u.Id)).ToDictionaryAsync(u => u.Id, u => u);
             var dimensions = await _context.ReviewDimensions.Where(d => reviewRoleIds.Contains(d.ReviewerRoleId)).ToListAsync();
@@ -44,23 +44,30 @@ namespace Perf360.Server.Controllers
             foreach (var participant in reviewDto.Participants)
             {
                 var user = users[participant.UserId];
-                review.UserReviews.Add(new UserReview { UserId = user.Id, ReviewRoleId = participant.ReviewRoleId });
-                await _context.SaveChangesAsync();
-                foreach (var dimension in dimensions.Where(d => d.ReviewerRoleId == participant.ReviewRoleId))
+                foreach (var reviewRoleId in participant.ReviewRoleIds)
                 {
-                    var targets = reviewDto.Participants.Where(p => p.ReviewRoleId == dimension.TargetRoleId).ToList();
-                    foreach (var target in targets)
-                    {
-                        var reviewRecord = new ReviewRecord
-                        {
-                            Name = dimension.Name,
-                            Description = dimension.Description,
-                            ReviewerId = participant.UserId,
-                            TargetId = target.UserId,
-                        };
-                        review.ReviewRecords.Add(reviewRecord);
-                    }
+                    review.UserReviews.Add(new UserReview { UserId = user.Id, ReviewRoleId = reviewRoleId });
                     await _context.SaveChangesAsync();
+                    foreach (var dimension in dimensions.Where(d => d.ReviewerRoleId == reviewRoleId))
+                    {
+                        var targets = reviewDto.Participants.Where(p => p.ReviewRoleIds.Contains(dimension.TargetRoleId)).ToList();
+                        foreach (var target in targets)
+                        {
+                            if (target.UserId == participant.UserId)
+                            {
+                                continue; // 自己不能评价自己
+                            }
+                            var reviewRecord = new ReviewRecord
+                            {
+                                Name = dimension.Name,
+                                Description = dimension.Description,
+                                ReviewerId = participant.UserId,
+                                TargetId = target.UserId,
+                            };
+                            review.ReviewRecords.Add(reviewRecord);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
 

@@ -408,7 +408,7 @@ namespace Perf360.Server.Data.Migrations
                     b.Property<uint>("ReviewRoleId")
                         .HasColumnType("int unsigned");
 
-                    b.HasKey("UserId", "ReviewId");
+                    b.HasKey("UserId", "ReviewId", "ReviewRoleId");
 
                     b.HasIndex("ReviewId");
 

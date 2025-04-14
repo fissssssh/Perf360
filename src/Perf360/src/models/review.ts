@@ -6,7 +6,7 @@ export interface Review {
 export interface Participant {
   userId: string
   username: string
-  reviewRoleId?: number
+  reviewRoleIds?: number[]
   reviewRoleName?: number
 }
 

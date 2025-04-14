@@ -48,7 +48,7 @@ const router = createRouter({
                   path: ':id',
                   name: 'review',
                   component: () => import('@/views/Home/Admin/Reviews/ReviewView.vue'),
-                  props: true,
+                  props: (route) => ({ id: Number(route.params.id) }),
                 },
               ],
             },

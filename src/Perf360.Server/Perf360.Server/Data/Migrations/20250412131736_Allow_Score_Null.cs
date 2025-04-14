@@ -5,7 +5,7 @@
 namespace Perf360.Server.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Record_Score_Allow_Null : Migration
+    public partial class Allow_Score_Null : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

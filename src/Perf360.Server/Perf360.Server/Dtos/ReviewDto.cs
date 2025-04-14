@@ -21,9 +21,10 @@ public class CreateReviewDto
         [JsonProperty("userId")]
         [Required]
         public string UserId { get; set; } = default!;
-        [JsonProperty("reviewRoleId")]
+
+        [JsonProperty("reviewRoleIds")]
         [Required]
-        public uint ReviewRoleId { get; set; }
+        public IList<uint> ReviewRoleIds { get; set; } = [];
     }
 
     [JsonProperty("name")]

@@ -12,8 +12,8 @@ using Perf360.Server.Data;
 namespace Perf360.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250402133420_Update_User_Review_Relations")]
-    partial class Update_User_Review_Relations
+    [Migration("20250412131546_Second_Version")]
+    partial class Second_Version
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -246,7 +246,7 @@ namespace Perf360.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<float>("Score")
+                    b.Property<float?>("Score")
                         .HasColumnType("float");
 
                     b.Property<string>("TargetId")
@@ -411,7 +411,7 @@ namespace Perf360.Server.Data.Migrations
                     b.Property<uint>("ReviewRoleId")
                         .HasColumnType("int unsigned");
 
-                    b.HasKey("UserId", "ReviewId");
+                    b.HasKey("UserId", "ReviewId", "ReviewRoleId");
 
                     b.HasIndex("ReviewId");
 

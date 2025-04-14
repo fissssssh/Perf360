@@ -36,7 +36,7 @@ namespace Perf360.Server.Data
             builder.Entity<Review>().HasMany(x => x.Participants).WithMany(x => x.Reviews).UsingEntity<UserReview>(
                 l => l.HasOne(l => l.User).WithMany(u => u.UserReviews).HasForeignKey(l => l.UserId),
                 r => r.HasOne(r => r.Review).WithMany(r => r.UserReviews).HasForeignKey(r => r.ReviewId),
-                j => j.HasKey(ur => new { ur.UserId, ur.ReviewId })
+                j => j.HasKey(ur => new { ur.UserId, ur.ReviewId, ur.ReviewRoleId })
             );
         }
 

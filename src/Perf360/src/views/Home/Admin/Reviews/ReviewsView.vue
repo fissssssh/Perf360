@@ -38,7 +38,7 @@
             :key="p.userId"
           >
             <span>{{ p.username }}</span>
-            <el-select style="width: 200px" v-model="p.reviewRoleId">
+            <el-select style="width: 200px" multiple v-model="p.reviewRoleIds">
               <el-option
                 v-for="r in reviewRoles"
                 :key="r.id"
