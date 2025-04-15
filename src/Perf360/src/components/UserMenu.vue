@@ -3,7 +3,8 @@
     <el-avatar class="cursor-pointer">{{ authStore.currentUserInformation?.username }}</el-avatar>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="authStore.logout">Logout</el-dropdown-item>
+        <el-dropdown-item @click="router.push('/profile')">Profile</el-dropdown-item>
+        <el-dropdown-item @click="authStore.logout" divided>Logout</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -13,4 +14,5 @@
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
+const router = useRouter()
 </script>

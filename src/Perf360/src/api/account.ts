@@ -13,4 +13,12 @@ export default {
   getCurrentUserInformation() {
     return client.get<User>('api/current-user-information')
   },
+
+  changePassword(oldPassword: string, newPassword: string) {
+    return client.post(
+      '/api/change-password',
+      { oldPassword, newPassword },
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    )
+  },
 }

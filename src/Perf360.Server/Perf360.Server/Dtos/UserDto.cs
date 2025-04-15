@@ -1,13 +1,18 @@
+using System.ComponentModel.DataAnnotations;
 using Mapster;
 using Newtonsoft.Json;
-using Perf360.Server.Data.Models;
 
 namespace Perf360.Server.Dtos;
 
 public class CreateUserDto
 {
+    [Required]
     [JsonProperty("username")]
     public string? UserName { get; set; } = default!;
+
+    [Required]
+    [JsonProperty("nickname")]
+    public string? NickName { get; set; }
 
     [JsonProperty("email")]
     public string? Email { get; set; }

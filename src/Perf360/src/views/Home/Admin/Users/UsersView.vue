@@ -1,7 +1,7 @@
 <template>
   <el-button class="mb-4" type="primary" @click="addUserDialogVisible = true">Add User</el-button>
   <el-table :data="users" stripe>
-    <el-table-column label="Name" prop="username" />
+    <el-table-column label="Name" prop="nickname" />
     <el-table-column label="Email" prop="email" />
     <el-table-column label="Phone Number" prop="phoneNumber" />
     <el-table-column label="Roles" prop="roles">
@@ -29,8 +29,11 @@
 
   <el-dialog v-model="addUserDialogVisible" title="Add User">
     <el-form v-model="addUserForm" @submit.prevent>
-      <el-form-item label="Name">
+      <el-form-item label="UserName">
         <el-input v-model="addUserForm.username" />
+      </el-form-item>
+      <el-form-item label="NickName">
+        <el-input v-model="addUserForm.nickname" />
       </el-form-item>
       <el-form-item label="Email">
         <el-input v-model="addUserForm.email"></el-input>

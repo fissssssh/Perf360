@@ -36,6 +36,7 @@ namespace Perf360.Server.Controllers
                         {
                             Id = g.Key.Id,
                             UserName = g.Key.UserName,
+                            NickName = g.Key.NickName,
                             Email = g.Key.Email,
                             PhoneNumber = g.Key.PhoneNumber,
                             Roles = g.Where(r => r != null).Select(r => r.Name!).ToArray()  // 角色名数组

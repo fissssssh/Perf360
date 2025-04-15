@@ -33,7 +33,7 @@ public class ReviewRecordTypeMappingRegister : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.ForType<ReviewRecord, ReviewRecordDto>()
-              .Map(dst => dst.Reviewer, src => src.Reviewer.UserName)
-              .Map(dst => dst.Target, src => src.Target.UserName);
+              .Map(dst => dst.Reviewer, src => src.Reviewer.NickName)
+              .Map(dst => dst.Target, src => src.Target.NickName);
     }
 }

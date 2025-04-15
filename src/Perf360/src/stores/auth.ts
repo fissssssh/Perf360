@@ -9,14 +9,14 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!token.value)
 
   async function login(username: string, password: string) {
-    const resp = await api.auth.getToken(username, password)
+    const resp = await api.account.getToken(username, password)
     token.value = resp.data.token
     await getCurrentUserInformation()
   }
 
   async function getCurrentUserInformation() {
     if (isAuthenticated.value) {
-      const resp = await api.auth.getCurrentUserInformation()
+      const resp = await api.account.getCurrentUserInformation()
       currentUserInformation.value = resp.data
     }
   }

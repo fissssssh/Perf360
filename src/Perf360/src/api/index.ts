@@ -1,4 +1,4 @@
-import auth from './auth'
+import account from './account'
 import dashboard from './dashboard'
 import reviewDimensions from './review-dimensions'
 import reviewRoles from './review-roles'
@@ -7,7 +7,7 @@ import roles from './roles'
 import users from './users'
 
 export default {
-  auth,
+  account,
   users,
   roles,
   reviewDimensions,

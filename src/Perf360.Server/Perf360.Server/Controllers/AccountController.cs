@@ -15,12 +15,12 @@ namespace Perf360.Server.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly JwtBearerSettings _jwtBearerSettings;
 
-        public AuthController(UserManager<User> userManager, IOptions<JwtBearerSettings> jwtBearerSettings)
+        public AccountController(UserManager<User> userManager, IOptions<JwtBearerSettings> jwtBearerSettings)
         {
             _userManager = userManager;
             _jwtBearerSettings = jwtBearerSettings.Value;
@@ -61,6 +61,26 @@ namespace Perf360.Server.Controllers
             return Ok(userDto);
         }
 
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordDto dto)
+        {
+            var username = HttpContext.User.Identity!.Name!;
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return NotFound("User doesn't exist.");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return NoContent();
+        }
+
         private string GenerateToken(User user, IEnumerable<string> roles)
         {
             var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtBearerSettings.IssuerSigningKey));
@@ -79,5 +99,7 @@ namespace Perf360.Server.Controllers
             var token = new JwtSecurityToken(_jwtBearerSettings.Issuer, _jwtBearerSettings.Audience, claims, expires: expires, signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
     }
 }

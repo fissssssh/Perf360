@@ -19,3 +19,12 @@ public class TokenResponse
     [JsonProperty("token")]
     public string Token { get; set; } = default!;
 }
+
+public class ChangePasswordDto
+{
+    [Required]
+    public string OldPassword { get; set; } = default!;
+
+    [Required]
+    public string NewPassword { get; set; } = default!;
+}
