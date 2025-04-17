@@ -17,7 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion);
+    options.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion, mysqlOptions =>
+    {
+        mysqlOptions.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+    });
     options.UseAsyncSeeding(async (context, _, cancellationToken) =>
     {
         var roleManger = context.GetService<RoleManager<Role>>();
@@ -31,6 +34,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             var admin = new User
             {
                 UserName = "admin",
+                NickName = "Admin",
                 Email = "admin@admin.com",
             };
             await userManager.CreateAsync(admin, "Admin123!");

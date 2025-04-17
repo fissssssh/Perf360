@@ -29,15 +29,15 @@ namespace Perf360.Server.Data
                     builder.Entity(entityType.ClrType).Property(nameof(Entity.CreateAt)).HasDefaultValueSql("CURRENT_TIMESTAMP(6)").ValueGeneratedOnAdd();
                     builder.Entity(entityType.ClrType).Property(nameof(Entity.UpdateAt)).HasDefaultValueSql("CURRENT_TIMESTAMP(6)").ValueGeneratedOnAddOrUpdate();
                     builder.Entity(entityType.ClrType).HasQueryFilter((LambdaExpression)typeof(AppDbContext).GetMethod(nameof(GetSoftDeleteQueryFilter), BindingFlags.Static | BindingFlags.NonPublic)!.MakeGenericMethod(entityType.ClrType).Invoke(null, null)!);
-
                 }
             }
 
             builder.Entity<Review>().HasMany(x => x.Participants).WithMany(x => x.Reviews).UsingEntity<UserReview>(
-                l => l.HasOne(l => l.User).WithMany(u => u.UserReviews).HasForeignKey(l => l.UserId),
-                r => r.HasOne(r => r.Review).WithMany(r => r.UserReviews).HasForeignKey(r => r.ReviewId),
+                l => l.HasOne(l => l.User).WithMany(u => u.UserReviews).HasForeignKey(l => l.UserId).IsRequired(false),
+                r => r.HasOne(r => r.Review).WithMany(r => r.UserReviews).HasForeignKey(r => r.ReviewId).IsRequired(false),
                 j => j.HasKey(ur => new { ur.UserId, ur.ReviewId, ur.ReviewRoleId })
             );
+            builder.Entity<UserReview>().HasOne(ur => ur.ReviewRole).WithMany().IsRequired(false);
         }
 
         static LambdaExpression GetSoftDeleteQueryFilter<TEntity>() where TEntity : Entity
